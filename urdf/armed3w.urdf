@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <robot name="armed3w">
+=======
+<robot name="armed3w-robot">
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
 
   <link name='body'>
     <inertial>
       <mass value="1"/>
+<<<<<<< HEAD
       #cylinder Izz = 1/2 * M * r^2
       #cylinder Iyy = Ixx = 1/12 * M * l^2
       <inertia ixx=".0675"  ixy="0"  ixz="0" iyy=".0675" iyz="0" izz=".045"/>
     </inertial>
+=======
+      <inertia ixx=".003"  ixy=".003"  ixz="0" iyy=".003" iyz="0" izz="0"/>
+    </inertial>
+
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
         <cylinder radius=".3" length=".9"/>
       </geometry>
     </collision>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -22,25 +36,43 @@
     </visual>
   </link>
 
+<<<<<<< HEAD
   <joint name="body_wheelFront" type="fixed">
     <parent link="body"/>
     <child link="wheelFront"/>
     <origin xyz="0 .2 -.48" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
+=======
+  <joint name="body-wheelFront" type="continuous">
+    <parent link="body"/>
+    <child link="wheelFront"/>
+    <origin xyz="0 .2 -.48" rpy="0 0 0"/>
+    <axis xyz="1 1 1"/>
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
   </joint>
 
   <link name='wheelFront'>
     <inertial>
       <mass value=".2"/>
+<<<<<<< HEAD
       # sphere: I = 2/5 * M * a^2
       <inertia ixx=".0002"  ixy="0"  ixz="0" iyy=".0002" iyz="0" izz=".0002"/>
     </inertial>
+=======
+      <inertia ixx=".001"  ixy=".001"  ixz=".001" iyy=".001" iyz=".001" izz=".001"/>
+    </inertial>
+
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
         <sphere radius=".05"/>
       </geometry>
     </collision>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -49,25 +81,43 @@
     </visual>
   </link>
 
+<<<<<<< HEAD
   <joint name="body_wheelRight" type="continuous">
     <parent link="body"/>
     <child link="wheelRight"/>
     <origin xyz="0.1732 -.1 -.48" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
+=======
+  <joint name="body-wheelRight" type="continuous">
+    <parent link="body"/>
+    <child link="wheelRight"/>
+    <origin xyz="0.1732 -.1 -.48" rpy="0 0 0"/>
+    <axis xyz="1 1 1"/>
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
   </joint>
 
   <link name='wheelRight'>
     <inertial>
       <mass value=".2"/>
+<<<<<<< HEAD
       # sphere: I = 2/5 * M * r^2
       <inertia ixx=".0002"  ixy="0.0"  ixz="0.0" iyy=".0002" iyz="0.0" izz=".0002"/>
     </inertial>
+=======
+      <inertia ixx=".001"  ixy=".001"  ixz=".001" iyy=".001" iyz=".001" izz=".001"/>
+    </inertial>
+
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
         <sphere radius=".05"/>
       </geometry>
     </collision>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -76,25 +126,43 @@
     </visual>
   </link>
 
+<<<<<<< HEAD
   <joint name="body_wheelLeft" type="continuous">
     <parent link="body"/>
     <child link="wheelLeft"/>
     <origin xyz="-0.1732 -.1 -.48" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
+=======
+  <joint name="body-wheelLeft" type="continuous">
+    <parent link="body"/>
+    <child link="wheelLeft"/>
+    <origin xyz="-0.1732 -.1 -.48" rpy="0 0 0"/>
+    <axis xyz="1 1 1"/>
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
   </joint>
 
   <link name='wheelLeft'>
     <inertial>
       <mass value=".2"/>
+<<<<<<< HEAD
       # sphere: I = 2/5 * M * r^2
       <inertia ixx=".0002"  ixy="0.0"  ixz="0.0" iyy=".0002" iyz="0.0" izz=".0002"/>
     </inertial>
+=======
+      <inertia ixx=".001"  ixy=".001"  ixz=".001" iyy=".001" iyz=".001" izz=".001"/>
+    </inertial>
+
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
         <sphere radius=".05"/>
       </geometry>
     </collision>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -103,26 +171,44 @@
     </visual>
   </link>
 
+<<<<<<< HEAD
   <joint name="body_armRight" type="continuous">
     <parent link="body"/>
     <child link="armRight"/>
     <origin xyz=".3 0 .2" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
+=======
+  <joint name="body-armRight" type="continuous">
+    <parent link="body"/>
+    <child link="armRight"/>
+    <origin xyz=".3 0 .2" rpy="0 0 0"/>
+    <axis xyz="1 1 1"/>
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
   </joint>
 
   <link name='armRight'>
     <inertial>
       <mass value=".1"/>
+<<<<<<< HEAD
       #cylinder Izz = 1/2 * M * r^2
       #cylinder Iyy = Ixx = 1/12 * M * l^2
       <inertia ixx=".003"  ixy="0"  ixz="0" iyy=".003" iyz="0" izz=".000045"/>
     </inertial>
+=======
+      <inertia ixx=".0001"  ixy=".0001"  ixz="0" iyy=".0001" iyz="0" izz="0"/>
+    </inertial>
+
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
     <collision>
       <origin xyz="0 0 -.3" rpy="0 0 0"/>
       <geometry>
         <cylinder radius=".03" length=".6"/>
       </geometry>
     </collision>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
     <visual>
       <origin xyz="0 0 -.3" rpy="0 0 0"/>
       <geometry>
@@ -131,6 +217,7 @@
     </visual>
   </link>
 
+<<<<<<< HEAD
     <joint name="body_armLeft" type="continuous">
       <parent link="body"/>
       <child link="armLeft"/>
@@ -145,12 +232,31 @@
       #cylinder Iyy = Ixx = 1/12 * M * l^2
       <inertia ixx=".003"  ixy="0"  ixz="0" iyy=".003" iyz="0" izz=".000045"/>
       </inertial>
+=======
+  <joint name="body-armLeft" type="continuous">
+    <parent link="body"/>
+    <child link="armLeft"/>
+    <origin xyz="-.3 0 .2" rpy="0 0 0"/>
+    <axis xyz="1 1 1"/>
+  </joint>
+
+  <link name='armLeft'>
+      <inertial>
+        <mass value=".1"/>
+        <inertia ixx=".0001"  ixy=".0001"  ixz="0" iyy=".0001" iyz="0" izz="0"/>
+      </inertial>
+
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
       <collision>
         <origin xyz="0 0 -.3" rpy="0 0 0"/>
         <geometry>
           <cylinder radius=".03" length=".6"/>
         </geometry>
       </collision>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
       <visual>
         <origin xyz="0 0 -.3" rpy="0 0 0"/>
         <geometry>
@@ -159,6 +265,7 @@
       </visual>
     </link>
 
+<<<<<<< HEAD
   <link name="base_footprint"/>
   <joint name="base_link_joint" type="fixed">
     <parent link="base_footprint"/>
@@ -252,6 +359,12 @@
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotNamespace>/armed3w</robotNamespace>
+=======
+  <!-- Add controllers -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/3wheels</robotNamespace>
+>>>>>>> 531b33f9fe7208bd42602f37476903be116275ee
     </plugin>
   </gazebo>
 
