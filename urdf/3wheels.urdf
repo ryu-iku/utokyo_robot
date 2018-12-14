@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="3wheels">
+
+  <link name='body'>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx=".003"  ixy=".003"  ixz="0" iyy=".003" iyz="0" izz="0"/>
+    </inertial>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".3" length=".05"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".3" length=".05"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name='wheel01'>
+    <inertial>
+      <mass value=".2"/>
+      <inertia ixx=".001"  ixy=".001"  ixz=".001" iyy=".001" iyz=".001" izz=".001"/>
+    </inertial>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="body_wheel01" type="continuous">
+    <parent link="body"/>
+    <child link="wheel01"/>
+    <origin xyz="0 .2 -.03" rpy="0 0 0"/>
+    <axis xyz="1 1 1"/>
+  </joint>
+
+  <link name='wheel02'>
+    <inertial>
+      <mass value=".2"/>
+      <inertia ixx=".001"  ixy=".001"  ixz=".001" iyy=".001" iyz=".001" izz=".001"/>
+    </inertial>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="body_wheel02" type="fixed">
+    <parent link="body"/>
+    <child link="wheel02"/>
+    <origin xyz="0.1732 -.1 -.03" rpy="0 0 0"/>
+    <axis xyz="1 1 1"/>
+  </joint>
+
+
+  <link name='wheel03'>
+    <inertial>
+      <mass value=".2"/>
+      <inertia ixx=".001"  ixy=".001"  ixz=".001" iyy=".001" iyz=".001" izz=".001"/>
+    </inertial>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="body_wheel03" type="continuous">
+    <parent link="body"/>
+    <child link="wheel03"/>
+    <origin xyz="-0.1732 -.1 -.03" rpy="0 0 0"/>
+    <axis xyz="1 1 1"/>
+  </joint>
+  
+
+
+  <link name="base_footprint"/>
+  <joint name="base_link_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="body"/>
+    <origin xyz="0 0 0.100"/>
+  </joint>
+
+  <!-- controller start-->
+  <transmission name="body_wheel01_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="body_wheel01">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="body_wheel01_motor">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>30</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="body_wheel03_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="body_wheel03">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="body_wheel03_motor">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>30</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <!-- controller end-->
+  
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/3wheels</robotNamespace>
+    </plugin>
+  </gazebo>
+  
+  <!-- coefficient of friction start-->
+  <gazebo reference="body">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.05"/>
+      <mu2 value="0.05"/>
+  </gazebo>
+
+  <gazebo reference="wheel01">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.0"/>
+      <mu2 value="0.0"/>
+  </gazebo>
+
+  <gazebo reference="wheel02">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.8"/>
+      <mu2 value="0.8"/>
+  </gazebo>
+
+  <gazebo reference="wheel03">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.8"/>
+      <mu2 value="0.8"/>
+  </gazebo>
+
+  <!-- coefficient of friction end-->
+
+</robot>

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="armed3w">
+
+  <link name='body'>
+    <inertial>
+      <mass value="1"/>
+      #cylinder Izz = 1/2 * M * r^2
+      #cylinder Iyy = Ixx = 1/12 * M * l^2
+      <inertia ixx=".0675"  ixy="0"  ixz="0" iyy=".0675" iyz="0" izz=".045"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".3" length=".9"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".3" length=".9"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="body_wheelFront" type="fixed">
+    <parent link="body"/>
+    <child link="wheelFront"/>
+    <origin xyz="0 .2 -.48" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <link name='wheelFront'>
+    <inertial>
+      <mass value=".2"/>
+      # sphere: I = 2/5 * M * a^2
+      <inertia ixx=".0002"  ixy="0"  ixz="0" iyy=".0002" iyz="0" izz=".0002"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="body_wheelRight" type="continuous">
+    <parent link="body"/>
+    <child link="wheelRight"/>
+    <origin xyz="0.1732 -.1 -.48" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <link name='wheelRight'>
+    <inertial>
+      <mass value=".2"/>
+      # sphere: I = 2/5 * M * r^2
+      <inertia ixx=".0002"  ixy="0.0"  ixz="0.0" iyy=".0002" iyz="0.0" izz=".0002"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="body_wheelLeft" type="continuous">
+    <parent link="body"/>
+    <child link="wheelLeft"/>
+    <origin xyz="-0.1732 -.1 -.48" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <link name='wheelLeft'>
+    <inertial>
+      <mass value=".2"/>
+      # sphere: I = 2/5 * M * r^2
+      <inertia ixx=".0002"  ixy="0.0"  ixz="0.0" iyy=".0002" iyz="0.0" izz=".0002"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="body_armRight" type="continuous">
+    <parent link="body"/>
+    <child link="armRight"/>
+    <origin xyz=".3 0 .2" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <link name='armRight'>
+    <inertial>
+      <mass value=".1"/>
+      #cylinder Izz = 1/2 * M * r^2
+      #cylinder Iyy = Ixx = 1/12 * M * l^2
+      <inertia ixx=".003"  ixy="0"  ixz="0" iyy=".003" iyz="0" izz=".000045"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 -.3" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".03" length=".6"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 -.3" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".03" length=".6"/>
+      </geometry>
+    </visual>
+  </link>
+
+    <joint name="body_armLeft" type="continuous">
+      <parent link="body"/>
+      <child link="armLeft"/>
+      <origin xyz="-.3 0 .2" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+    </joint>
+
+    <link name='armLeft'>
+      <inertial>
+        <mass value=".1"/>
+      #cylinder Izz = 1/2 * M * r^2
+      #cylinder Iyy = Ixx = 1/12 * M * l^2
+      <inertia ixx=".003"  ixy="0"  ixz="0" iyy=".003" iyz="0" izz=".000045"/>
+      </inertial>
+      <collision>
+        <origin xyz="0 0 -.3" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius=".03" length=".6"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin xyz="0 0 -.3" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius=".03" length=".6"/>
+        </geometry>
+      </visual>
+    </link>
+
+  <link name="base_footprint"/>
+  <joint name="base_link_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="body"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+
+  <!-- controller start-->
+  <transmission name="body_wheelRight_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="body_wheelRight">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="body_wheelRight_motor">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>30</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="body_wheelLeft_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="body_wheelLeft">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="body_wheelLeft_motor">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>30</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="body_armRight_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="body_armRight">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="body_armRight_motor">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>30</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="body_armLeft_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="body_armLeft">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="body_armLeft_motor">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>30</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <!-- controller end-->
+
+  <!-- coefficient of friction start-->
+  <gazebo reference="body">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.05"/>
+      <mu2 value="0.05"/>
+  </gazebo>
+
+  <gazebo reference="wheelFront">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.0"/>
+      <mu2 value="0.0"/>
+  </gazebo>
+
+  <gazebo reference="wheelRight">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.8"/>
+      <mu2 value="0.8"/>
+  </gazebo>
+
+  <gazebo reference="wheelLeft">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.8"/>
+      <mu2 value="0.8"/>
+  </gazebo>
+
+  <gazebo reference="armRight">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.8"/>
+      <mu2 value="0.8"/>
+  </gazebo>
+  <gazebo reference="armLeft">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.8"/>
+      <mu2 value="0.8"/>
+  </gazebo>
+  <!-- coefficient of friction end-->
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/armed3w</robotNamespace>
+    </plugin>
+  </gazebo>
+
+</robot>
