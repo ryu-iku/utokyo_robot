@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="armed3w-robot">
+
+  <link name='body'>
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx=".003"  ixy=".003"  ixz="0" iyy=".003" iyz="0" izz="0"/>
+    </inertial>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".3" length=".9"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".3" length=".9"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="body-wheelFront" type="continuous">
+    <parent link="body"/>
+    <child link="wheelFront"/>
+    <origin xyz="0 .2 -.48" rpy="0 0 0"/>
+    <axis xyz="1 1 1"/>
+  </joint>
+
+  <link name='wheelFront'>
+    <inertial>
+      <mass value=".2"/>
+      <inertia ixx=".001"  ixy=".001"  ixz=".001" iyy=".001" iyz=".001" izz=".001"/>
+    </inertial>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="body-wheelRight" type="continuous">
+    <parent link="body"/>
+    <child link="wheelRight"/>
+    <origin xyz="0.1732 -.1 -.48" rpy="0 0 0"/>
+    <axis xyz="1 1 1"/>
+  </joint>
+
+  <link name='wheelRight'>
+    <inertial>
+      <mass value=".2"/>
+      <inertia ixx=".001"  ixy=".001"  ixz=".001" iyy=".001" iyz=".001" izz=".001"/>
+    </inertial>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="body-wheelLeft" type="continuous">
+    <parent link="body"/>
+    <child link="wheelLeft"/>
+    <origin xyz="-0.1732 -.1 -.48" rpy="0 0 0"/>
+    <axis xyz="1 1 1"/>
+  </joint>
+
+  <link name='wheelLeft'>
+    <inertial>
+      <mass value=".2"/>
+      <inertia ixx=".001"  ixy=".001"  ixz=".001" iyy=".001" iyz=".001" izz=".001"/>
+    </inertial>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".05"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="body-armRight" type="continuous">
+    <parent link="body"/>
+    <child link="armRight"/>
+    <origin xyz=".3 0 .2" rpy="0 0 0"/>
+    <axis xyz="1 1 1"/>
+  </joint>
+
+  <link name='armRight'>
+    <inertial>
+      <mass value=".1"/>
+      <inertia ixx=".0001"  ixy=".0001"  ixz="0" iyy=".0001" iyz="0" izz="0"/>
+    </inertial>
+
+    <collision>
+      <origin xyz="0 0 -.3" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".03" length=".6"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 -.3" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".03" length=".6"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="body-armLeft" type="continuous">
+    <parent link="body"/>
+    <child link="armLeft"/>
+    <origin xyz="-.3 0 .2" rpy="0 0 0"/>
+    <axis xyz="1 1 1"/>
+  </joint>
+
+  <link name='armLeft'>
+      <inertial>
+        <mass value=".1"/>
+        <inertia ixx=".0001"  ixy=".0001"  ixz="0" iyy=".0001" iyz="0" izz="0"/>
+      </inertial>
+
+      <collision>
+        <origin xyz="0 0 -.3" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius=".03" length=".6"/>
+        </geometry>
+      </collision>
+
+      <visual>
+        <origin xyz="0 0 -.3" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius=".03" length=".6"/>
+        </geometry>
+      </visual>
+    </link>
+
+  <!-- Add controllers -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/3wheels</robotNamespace>
+    </plugin>
+  </gazebo>
+
+</robot>
