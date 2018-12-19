@@ -2,8 +2,8 @@
 import rospy
 from geometry_msgs.msg import Twist
 
-rospy.init_ndoe('vel_publisher')
-pub = rospy.publisher('/armed3w/diff_drive_controller/cmd_vel', Twist, quesize = 10)
+rospy.init_node('vel_publisher')
+pub = rospy.Publisher('/armed3w/diff_drive_controller/cmd_vel', Twist, queue_size = 10)
 while not rospy.is_shutdown():
 	vel = Twist()
 	direction = raw_input('f: forward, b: back, l:left, r:right > ')
@@ -19,4 +19,3 @@ while not rospy.is_shutdown():
 		berak
 	print vel
 	pub.publish(vel)
-

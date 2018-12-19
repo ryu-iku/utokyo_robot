@@ -249,42 +249,78 @@
   </gazebo>
   <!-- coefficient of friction end-->
 
-  <!-- sensor start-->
-  <gazebo reference="body">
-    <sensor type="ray" name="body-sensor">
-      <pose>0 0 0 0 0 0</pose>
-      <visualize>false</visualize>
-      <update_rate>10</update_rate>
-      <ray>
-        <scan>
-          <horizontal>
-            <samples>100</samples>
-            <resolution>1</resolution>
-            <min_angle>-1</min_angle>
-            <max_angle> 1</max_angle>
-          </horizontal>
-        </scan>
-        <range>
-          <min>0.10</min>
-          <max>20.0</max>
-          <resolution>0.01</resolution>
-        </range>
-      </ray>
-      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
-        <topicName>/laser/scan</topicName>
-        <frameName>body</frameName>
-      </plugin>
-    </sensor>
-  </gazebo>
 
-  <gazebo reference="body">
+  <joint name="camera_joint" type="fixed">
+    <origin xyz="0 -.4 0" rpy="0 0 0"/>
+    <parent link="body"/>
+    <child link="camera"/>
+  </joint>
+
+  <link name="camera">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size=".1 .1 .1"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size=".1 .1 .1"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+
+    <inertial>
+      <mass value=".01" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <box_inertia m=".01" x=".1" y=".1" z=".1" />
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+
+
+  <joint name="hokuyo_joint" type="fixed">
+    <origin xyz="0 -.4 -.1" rpy="0 0 -1.570796"/>
+    <parent link="body"/>
+    <child link="hokuyo"/>
+  </joint>
+
+  <!-- Hokuyo Laser -->
+  <link name="hokuyo">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </visual>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+
+
+  <!-- sensor start-->
+  <gazebo reference="camera">
+    <material>Gazebo/Green</material>
     <sensor type="camera" name="camera1">
-      <update_rate>30.0</update_rate>
+      <update_rate>1</update_rate>
       <camera name="head">
         <horizontal_fov>1.3962634</horizontal_fov>
         <image>
-          <width>800</width>
-          <height>800</height>
+          <width>20</width>
+          <height>20</height>
           <format>R8G8B8</format>
         </image>
         <clip>
@@ -295,16 +331,46 @@
       <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
         <alwaysOn>true</alwaysOn>
         <updateRate>0.0</updateRate>
-        <cameraName>rrbot/camera1</cameraName>
+        <cameraName>mybot/camera1</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>camera_link</frameName>
+        <frameName>camera</frameName>
         <hackBaseline>0.07</hackBaseline>
         <distortionK1>0.0</distortionK1>
         <distortionK2>0.0</distortionK2>
         <distortionK3>0.0</distortionK3>
         <distortionT1>0.0</distortionT1>
         <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- hokuyo -->
+  <!-- Data explaination-- https://answers.ros.org/question/198843/need-explanation-on-sensor_msgslaserscanmsg/ -->
+  <gazebo reference="hokuyo">
+    <material>Gazebo/FlatBlack</material>
+    <sensor type="ray" name="lds_lfcd_sensor">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>1</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>100</samples>
+            <resolution>1</resolution>
+            <min_angle>-1.570796</min_angle>
+            <max_angle>1.570796</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.120</min>
+          <max>20</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+        <topicName>scan</topicName>
+        <frameName>hokuyo</frameName>
       </plugin>
     </sensor>
   </gazebo>
