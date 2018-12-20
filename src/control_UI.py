@@ -19,4 +19,3 @@ while not rospy.is_shutdown():
 		berak
 	print vel
 	pub.publish(vel)
-

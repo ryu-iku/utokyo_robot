@@ -8,9 +8,9 @@ while not rospy.is_shutdown():
 	vel = Twist()
 	direction = raw_input('u: up, d: down > ')
 	if 'u' in direction:
-		vel.linear.x = 2.0
-	if 'd' in direction:
 		vel.linear.x = -2.0
+	if 'd' in direction:
+		vel.linear.x = 2.0
 	if 'q' in direction:
 		berak
 	print vel
