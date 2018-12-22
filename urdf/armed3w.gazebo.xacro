@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="armed3w" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- coefficient of friction start-->
+  <gazebo reference="body">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.05"/>
+      <mu2 value="0.05"/>
+  </gazebo>
+
+  <gazebo reference="wheelFront">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.0"/>
+      <mu2 value="0.0"/>
+  </gazebo>
+
+  <gazebo reference="wheelRight">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.8"/>
+      <mu2 value="0.8"/>
+  </gazebo>
+
+  <gazebo reference="wheelLeft">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.8"/>
+      <mu2 value="0.8"/>
+  </gazebo>
+
+  <gazebo reference="armRight">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.8"/>
+      <mu2 value="0.8"/>
+  </gazebo>
+  <gazebo reference="armLeft">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.8"/>
+      <mu2 value="0.8"/>
+  </gazebo>
+  <!-- coefficient of friction end-->
+
+  <!-- sensor start-->
+  <gazebo reference="camera">
+    <material>Gazebo/Green</material>
+    <sensor type="camera" name="camera1">
+      <update_rate>1</update_rate>
+      <camera name="head">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>20</width>
+          <height>20</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>mybot/camera1</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- hokuyo -->
+  <gazebo reference="hokuyo">
+    <material>Gazebo/FlatBlack</material>
+    <sensor type="ray" name="lds_lfcd_sensor">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>2</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>21</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.1415926</min_angle>
+            <max_angle>3.1415926</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.10</min>
+          <max>20</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+        <topicName>scan</topicName>
+        <frameName>hokuyo</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+  <!-- sensor end-->
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/armed3w</robotNamespace>
+    </plugin>
+  </gazebo>
+
+</robot>

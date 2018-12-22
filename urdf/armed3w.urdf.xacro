@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot name="armed3w">
+<robot name="armed3w" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find robot_utokyo)/urdf/armed3w.gazebo.xacro"/>
+
+  <xacro:property name="body_height" value="0.4" />
+  <xacro:property name="wheel_radius" value="0.05" />
+  <xacro:property name="arm_length" value="0.6" />
+  <xacro:property name="pi" value="3.1415926" />
+  <xacro:property name="sensor_size" value=".1" />
 
   <link name="base_footprint"/>
 
@@ -9,6 +16,7 @@
     <child link="body"/>
     <origin xyz="-4 5 0"/>
   </joint>
+
   <link name='body'>
     <inertial>
       <mass value="1"/>
@@ -19,13 +27,13 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius=".3" length=".9"/>
+        <cylinder radius=".3" length="${body_height}"/>
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius=".3" length=".9"/>
+        <cylinder radius=".3" length="${body_height}"/>
       </geometry>
     </visual>
   </link>
@@ -33,7 +41,7 @@
   <joint name="body_wheelFront" type="fixed">
     <parent link="body"/>
     <child link="wheelFront"/>
-    <origin xyz="0 .2 -.48" rpy="0 0 0"/>
+    <origin xyz="0 .2 ${- body_height / 2 - wheel_radius / 2}" rpy="0 0 0"/>
   </joint>
 
   <link name='wheelFront'>
@@ -45,13 +53,13 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <sphere radius=".05"/>
+        <sphere radius="${wheel_radius}"/>
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <sphere radius=".05"/>
+        <sphere radius="${wheel_radius}"/>
       </geometry>
     </visual>
   </link>
@@ -59,7 +67,7 @@
   <joint name="body_wheelRight" type="continuous">
     <parent link="body"/>
     <child link="wheelRight"/>
-    <origin xyz="0.1732 -.1 -.48" rpy="0 0 0"/>
+    <origin xyz="0.1732 -.1 ${- body_height / 2 - wheel_radius / 2}" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
   </joint>
 
@@ -72,13 +80,13 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <sphere radius=".05"/>
+        <sphere radius="${wheel_radius}"/>
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <sphere radius=".05"/>
+        <sphere radius="${wheel_radius}"/>
       </geometry>
     </visual>
   </link>
@@ -86,7 +94,7 @@
   <joint name="body_wheelLeft" type="continuous">
     <parent link="body"/>
     <child link="wheelLeft"/>
-    <origin xyz="-0.1732 -.1 -.48" rpy="0 0 0"/>
+    <origin xyz="-0.1732 -.1 ${- body_height / 2 - wheel_radius / 2}" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
   </joint>
 
@@ -99,13 +107,13 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <sphere radius=".05"/>
+        <sphere radius="${wheel_radius}"/>
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <sphere radius=".05"/>
+        <sphere radius="${wheel_radius}"/>
       </geometry>
     </visual>
   </link>
@@ -113,7 +121,7 @@
   <joint name="body_armRight" type="continuous">
     <parent link="body"/>
     <child link="armRight"/>
-    <origin xyz=".3 0 .2" rpy="0 0 0"/>
+    <origin xyz=".3 0 .2" rpy="${- pi / 2} 0 0"/>
     <axis xyz="1 0 0"/>
   </joint>
 
@@ -127,13 +135,13 @@
     <collision>
       <origin xyz="0 0 -.3" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius=".03" length=".6"/>
+        <cylinder radius=".03" length="${arm_length}"/>
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 0 -.3" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius=".03" length=".6"/>
+        <cylinder radius=".03" length="${arm_length}"/>
       </geometry>
     </visual>
   </link>
@@ -141,7 +149,7 @@
   <joint name="body_armLeft" type="continuous">
     <parent link="body"/>
     <child link="armLeft"/>
-    <origin xyz="-.3 0 .2" rpy="0 0 0"/>
+    <origin xyz="-.3 0 .2" rpy="${- pi / 2} 0 0"/>
     <axis xyz="1 0 0"/>
   </joint>
 
@@ -155,13 +163,13 @@
       <collision>
         <origin xyz="0 0 -.3" rpy="0 0 0"/>
         <geometry>
-          <cylinder radius=".03" length=".6"/>
+          <cylinder radius=".03" length="${arm_length}"/>
         </geometry>
       </collision>
       <visual>
         <origin xyz="0 0 -.3" rpy="0 0 0"/>
         <geometry>
-          <cylinder radius=".03" length=".6"/>
+          <cylinder radius=".03" length="${arm_length}"/>
         </geometry>
       </visual>
     </link>
@@ -212,44 +220,6 @@
   </transmission>
   <!-- controller end-->
 
-  <!-- coefficient of friction start-->
-  <gazebo reference="body">
-    <selfCollide>true</selfCollide>
-      <mu1 value="0.05"/>
-      <mu2 value="0.05"/>
-  </gazebo>
-
-  <gazebo reference="wheelFront">
-    <selfCollide>true</selfCollide>
-      <mu1 value="0.0"/>
-      <mu2 value="0.0"/>
-  </gazebo>
-
-  <gazebo reference="wheelRight">
-    <selfCollide>true</selfCollide>
-      <mu1 value="0.8"/>
-      <mu2 value="0.8"/>
-  </gazebo>
-
-  <gazebo reference="wheelLeft">
-    <selfCollide>true</selfCollide>
-      <mu1 value="0.8"/>
-      <mu2 value="0.8"/>
-  </gazebo>
-
-  <gazebo reference="armRight">
-    <selfCollide>true</selfCollide>
-      <mu1 value="0.8"/>
-      <mu2 value="0.8"/>
-  </gazebo>
-  <gazebo reference="armLeft">
-    <selfCollide>true</selfCollide>
-      <mu1 value="0.8"/>
-      <mu2 value="0.8"/>
-  </gazebo>
-  <!-- coefficient of friction end-->
-
-
   <joint name="camera_joint" type="fixed">
     <origin xyz="0 -.4 0" rpy="0 0 0"/>
     <parent link="body"/>
@@ -260,14 +230,14 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <box size=".1 .1 .1"/>
+        <box size="${sensor_size} ${sensor_size} ${sensor_size}"/>
       </geometry>
     </collision>
 
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <box size=".1 .1 .1"/>
+        <box size="${sensor_size} ${sensor_size} ${sensor_size}"/>
       </geometry>
       <material name="green"/>
     </visual>
@@ -282,7 +252,7 @@
 
 
   <joint name="hokuyo_joint" type="fixed">
-    <origin xyz="0 -.4 -.1" rpy="0 0 -1.570796"/>
+    <origin xyz="0 0 ${body_height / 2 + sensor_size / 2}" rpy="0 0 -1.570796"/>
     <parent link="body"/>
     <child link="hokuyo"/>
   </joint>
@@ -292,14 +262,14 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <box size="0.1 0.1 0.1"/>
+        <box size="${sensor_size} ${sensor_size} ${sensor_size}"/>
       </geometry>
     </collision>
 
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <box size="0.1 0.1 0.1"/>
+        <box size="${sensor_size} ${sensor_size} ${sensor_size}"/>
       </geometry>
     </visual>
 
@@ -309,77 +279,5 @@
       <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
     </inertial>
   </link>
-
-
-  <!-- sensor start-->
-  <gazebo reference="camera">
-    <material>Gazebo/Green</material>
-    <sensor type="camera" name="camera1">
-      <update_rate>1</update_rate>
-      <camera name="head">
-        <horizontal_fov>1.3962634</horizontal_fov>
-        <image>
-          <width>20</width>
-          <height>20</height>
-          <format>R8G8B8</format>
-        </image>
-        <clip>
-          <near>0.02</near>
-          <far>300</far>
-        </clip>
-      </camera>
-      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-        <alwaysOn>true</alwaysOn>
-        <updateRate>0.0</updateRate>
-        <cameraName>mybot/camera1</cameraName>
-        <imageTopicName>image_raw</imageTopicName>
-        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>camera</frameName>
-        <hackBaseline>0.07</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
-        <distortionT2>0.0</distortionT2>
-      </plugin>
-    </sensor>
-  </gazebo>
-
-  <!-- hokuyo -->
-  <!-- Data explaination-- https://answers.ros.org/question/198843/need-explanation-on-sensor_msgslaserscanmsg/ -->
-  <gazebo reference="hokuyo">
-    <material>Gazebo/FlatBlack</material>
-    <sensor type="ray" name="lds_lfcd_sensor">
-      <pose>0 0 0 0 0 0</pose>
-      <visualize>true</visualize>
-      <update_rate>1</update_rate>
-      <ray>
-        <scan>
-          <horizontal>
-            <samples>100</samples>
-            <resolution>1</resolution>
-            <min_angle>-1.570796</min_angle>
-            <max_angle>1.570796</max_angle>
-          </horizontal>
-        </scan>
-        <range>
-          <min>0.120</min>
-          <max>20</max>
-          <resolution>0.01</resolution>
-        </range>
-      </ray>
-      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
-        <topicName>scan</topicName>
-        <frameName>hokuyo</frameName>
-      </plugin>
-    </sensor>
-  </gazebo>
-  <!-- sensor end-->
-
-  <gazebo>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/armed3w</robotNamespace>
-    </plugin>
-  </gazebo>
 
 </robot>
