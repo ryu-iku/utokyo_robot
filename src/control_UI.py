@@ -8,9 +8,9 @@ while not rospy.is_shutdown():
 	vel = Twist()
 	direction = raw_input('f: forward, b: back, l:left, r:right > ')
 	if 'f' in direction:
-		vel.linear.x = 0.5
+		vel.linear.x = 2.0
 	if 'b' in direction:
-		vel.linear.x = -0.5
+		vel.linear.x = -2.0
 	if 'l' in direction:
 		vel.angular.z = 1.0
 	if 'r' in direction:

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="crown">
+  <link name='body'>
+    <inertial>
+      <mass value=".1"/>
+      #cylinder Izz = 1/2 * M * r^2
+      #cylinder Iyy = Ixx = 1/12 * M * l^2
+      <inertia ixx=".00075"  ixy="0"  ixz="0" iyy=".00075" iyz="0" izz=".0045"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".3" length=".3"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".3" length=".3"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name='head'>
+    <inertial>
+      <mass value=".05"/>
+      # sphere: I = 2/5 * M * a^2
+      <inertia ixx=".018"  ixy="0"  ixz="0" iyy=".018" iyz="0" izz=".018"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".3"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius=".3"/>
+      </geometry>
+    </visual>
+  </link>
+  <joint name="body_head" type="fixed">
+    <parent link="body"/>
+    <child link="head"/>
+    <origin xyz="0 0 .15" rpy="0 0 0"/>
+  </joint>
+
+
+  <link name='decoration1'>
+    <inertial><mass value=".0"/><inertia ixx="0"  ixy="0"  ixz="0" iyy="0" iyz="0" izz="0"/></inertial>
+    <collision><origin xyz="0 0 0" rpy="0 0 0"/><geometry><sphere radius=".05"/></geometry></collision>
+    <visual><origin xyz="0 0 0" rpy="0 0 0"/><geometry><sphere radius=".05"/></geometry></visual>
+  </link>
+  <link name='decoration2'>
+    <inertial><mass value=".0"/><inertia ixx="0"  ixy="0"  ixz="0" iyy="0" iyz="0" izz="0"/></inertial>
+    <collision><origin xyz="0 0 0" rpy="0 0 0"/><geometry><sphere radius=".05"/></geometry></collision>
+    <visual><origin xyz="0 0 0" rpy="0 0 0"/><geometry><sphere radius=".05"/></geometry></visual>
+  </link>
+  <link name='decoration3'>
+    <inertial><mass value=".0"/><inertia ixx="0"  ixy="0"  ixz="0" iyy="0" iyz="0" izz="0"/></inertial>
+    <collision><origin xyz="0 0 0" rpy="0 0 0"/><geometry><sphere radius=".05"/></geometry></collision>
+    <visual><origin xyz="0 0 0" rpy="0 0 0"/><geometry><sphere radius=".05"/></geometry></visual>
+  </link>
+  <link name='decoration4'>
+    <inertial><mass value=".0"/><inertia ixx="0"  ixy="0"  ixz="0" iyy="0" iyz="0" izz="0"/></inertial>
+    <collision><origin xyz="0 0 0" rpy="0 0 0"/><geometry><sphere radius=".05"/></geometry></collision>
+    <visual><origin xyz="0 0 0" rpy="0 0 0"/><geometry><sphere radius=".05"/></geometry></visual>
+  </link>
+  <link name='decoration5'>
+    <inertial><mass value=".0"/><inertia ixx="0"  ixy="0"  ixz="0" iyy="0" iyz="0" izz="0"/></inertial>
+    <collision><origin xyz="0 0 0" rpy="0 0 0"/><geometry><sphere radius=".05"/></geometry></collision>
+    <visual><origin xyz="0 0 0" rpy="0 0 0"/><geometry><sphere radius=".05"/></geometry></visual>
+  </link>
+  <link name='decoration6'>
+    <inertial><mass value=".0"/><inertia ixx="0"  ixy="0"  ixz="0" iyy="0" iyz="0" izz="0"/></inertial>
+    <collision><origin xyz="0 0 0" rpy="0 0 0"/><geometry><sphere radius=".05"/></geometry></collision>
+    <visual><origin xyz="0 0 0" rpy="0 0 0"/><geometry><sphere radius=".05"/></geometry></visual>
+  </link>
+
+  <joint name="head_deco1" type="fixed"><parent link="head"/><child link="decoration1"/><origin xyz=" .1  .173 .21" rpy="0 0 0"/></joint>
+  <joint name="head_deco2" type="fixed"><parent link="head"/><child link="decoration2"/><origin xyz=" .1 -.173 .21" rpy="0 0 0"/></joint>
+  <joint name="head_deco3" type="fixed"><parent link="head"/><child link="decoration3"/><origin xyz="-.1  .173 .21" rpy="0 0 0"/></joint>
+  <joint name="head_deco4" type="fixed"><parent link="head"/><child link="decoration4"/><origin xyz="-.1 -.173 .21" rpy="0 0 0"/></joint>
+  <joint name="head_deco5" type="fixed"><parent link="head"/><child link="decoration5"/><origin xyz=" .2 0.000 .21" rpy="0 0 0"/></joint>
+  <joint name="head_deco6" type="fixed"><parent link="head"/><child link="decoration6"/><origin xyz="-.2 0.000 .21" rpy="0 0 0"/></joint>
+
+</robot>

@@ -47,3 +47,15 @@ armed3w:
         has_acceleration_limits: true
         max_acceleration       : 0.3  # rad/s^2
         min_acceleration       : -0.3
+
+  arm_controller:
+    type        : "diff_drive_controller/DiffDriveController"
+    left_wheel  : 'body_armRight'
+    right_wheel : 'body_armLeft'
+    publish_rate: 50.0               # default: 50
+    pose_covariance_diagonal : [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0]
+    twist_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0]
+    wheel_separation : 0.6
+    wheel_radius : 0.63661
+    cmd_vel_timeout: 0.5
+
