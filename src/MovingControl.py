@@ -2,8 +2,6 @@ import sensor_msgs.point_cloud2 as pc2
 import rospy
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
-from nav_msgs.msg import Odometry
-
 import math
 import time
 
@@ -17,13 +15,13 @@ class MovingControl:
         self.shortest_road = 1
 
         self.back_i = 0
-        self.right_i = int(self.sample_n / 4)
+        self.left_i = int(self.sample_n / 4)
         self.front_i = int(self.sample_n / 2)
-        self.left_i = int(self.sample_n * 3 / 4)
-        self.right_back_i = int(self.sample_n * 1 / 8)
-        self.right_front_i = int(self.sample_n * 3 / 8)
-        self.left_front_i = int(self.sample_n * 5 / 8)
-        self.left_back_i = int(self.sample_n * 7 / 8)
+        self.right_i = int(self.sample_n * 3 / 4)
+        self.left_back_i = int(self.sample_n * 1 / 8)
+        self.left_front_i = int(self.sample_n * 3 / 8)
+        self.right_front_i = int(self.sample_n * 5 / 8)
+        self.right_back_i = int(self.sample_n * 7 / 8)
 
         self.ctrl_c = False
         rospy.on_shutdown(self.shutdownhook)
@@ -31,73 +29,81 @@ class MovingControl:
 
         self.state_set = {"start", "straight_road", "corner", "end", "turn_around_at_corner", "turn_around_at_end", "turning_over", "goal"}
         self.state = "start"
-        self.cur_direction = None
 
         self.cmd_vel_publisher = rospy.Publisher('/armed3w/diff_drive_controller/cmd_vel',
                         Twist, queue_size = 1)
-
-        while not rospy.is_shutdown():
-            rospy.Subscriber("/armed3w/diff_drive_controllerLR/odom", Odometry, self.update_odo_data)
-            rospy.Subscriber("/scan", LaserScan, self.update_scan_data, queue_size=1)
-
-        # rospy.spin()
-
-    def update_odo_data(self, msg):
-        self.position = msg.pose.pose.position
-        self.orientation = msg.pose.pose.orientation
-
-        print self.position
-        print self.orientation
-
-        # self.rate.sleep()
-        # rospy.sleep(.1)
+        rospy.Subscriber("/scan", LaserScan, self.update_scan_data, queue_size=1)
+        rospy.spin()
 
     def update_scan_data(self, msg):
         laser_ranges = msg.ranges
         mean_ranges = []
-
-        # Use moving average data
         for i in range(self.sample_n):
-            cur_s = laser_ranges[i]
+            curr_s = laser_ranges[i]
             prev_s = laser_ranges[i - 1]
             next_s = laser_ranges[(i + 1) % self.sample_n]
 
-            mean_s = sum((cur_s, prev_s, next_s)) / 3
+            mean_s = sum((curr_s, prev_s, next_s)) / 3
             mean_ranges.append(mean_s)
 
         self.laser_ranges = mean_ranges
         print self.laser_ranges
 
-        # self.update_state_and_move()
+        self.update_state_and_move()
         # self.update_sensor_data_analysis()
+
         # self.move_robot()
-        # self.move_on()
 
-        # self.rate.sleep()
+    def update_state_and_move(self):
+        self.update_sensor_data_analysis()
+        print(self.local_max_arr)
+        print(self.local_min_arr)
+        print(self.state)
 
+        if self.state == "start":
+            self.state_handle()
 
+        elif self.state == "straight_road":
+            self.go_straight(.1)
+            self.state_handle()
 
+        elif self.state == "corner":
+            self.stop()
+
+            self.record_sensor_data()
+            self.state = "turn_around_at_corner"
+
+        elif self.state == "end":
+            self.stop()
+            self.record_sensor_data()
+            self.state = "turn_around_at_end"
+
+        elif self.state == "turn_around_at_corner":
+            self.turn_direction(-.05)
+            if self.check_turning_over():
+                self.state = "turning_over"
+
+        elif self.state == "turn_around_at_end":
+            self.turn_direction(-.05)
+            if self.check_turning_over():
+                self.state = "turning_over"
+
+        elif self.state == "turning_over":
+            self.state = "straight_road"
 
     def update_sensor_data_analysis(self):
         local_max_arr = []
         local_min_arr = []
 
-        for i in range(self.right_i, self.left_i + 1):
-            cur_s = self.laser_ranges[i]
+        for i in range(self.sample_n):
+            curr_s = self.laser_ranges[i]
             prev_s = self.laser_ranges[i - 1]
             next_s = self.laser_ranges[(i + 1) % self.sample_n]
 
-            if cur_s > prev_s and cur_s >= next_s:
+            if curr_s > prev_s and curr_s >= next_s:
                 local_max_arr.append(i)
-            if cur_s < prev_s and cur_s <= next_s:
+            if curr_s < prev_s and curr_s <= next_s:
                 local_min_arr.append(i)
-
-        ava_direction = []
-        for i in local_max_arr:
-            direction_minus = i - int(self.sample_n / 4)
-            direction_plus = i + int(self.sample_n / 4)
-            if min(self.laser_ranges[direction_minus:direction_plus]) > 1.0:
-                ava_direction.append(i)
 
         self.front_max = self.front_i in local_max_arr
         self.front_min = self.front_i in local_min_arr
@@ -113,70 +119,17 @@ class MovingControl:
 
         self.local_max_arr = local_max_arr
         self.local_min_arr = local_min_arr
-        self.ava_direction = ava_direction
-
-        print("max", self.local_max_arr)
-        print("ava_direction", self.ava_direction)
-
-    def move_robot(self):
-        front_dis = self.laser_ranges[self.front_i]
-        print("front_dis", front_dis)
-        if  front_dis> 1 and ((self.right_min or self.right_max) and (self.left_min or self.left_max)):
-            print("go straight")
-            self.go_straight(1)
-            self.state = "go_straight"
-        elif front_dis <= 1:
-            print("turn around")
-            self.turn_direction(-1)
-            self.state = "turn_around"
-        else:
-            if self.state == "turn_around":
-                self.turn_direction(1)
-            else:
-                self.go_straight(1)
-
-    def update_state_and_move(self):
-        self.update_sensor_data_analysis()
-        print(self.state)
-
-        if self.state == "start":
-            self.state_handle()
-
-        elif self.state == "straight_road":
-            self.go_straight(1)
-            self.state_handle()
-
-        elif self.state == "corner":
-            self.stop()
-            self.state = "turn_around_at_corner"
-
-        elif self.state == "end":
-            self.stop()
-            self.state = "turn_around_at_end"
-
-        elif self.state == "turn_around_at_corner":
-            self.turn_direction(-.5)
-            if self.check_turning_over():
-                self.state = "turning_over"
-
-        elif self.state == "turn_around_at_end":
-            self.turn_direction(-.5)
-            if self.check_turning_over():
-                self.state = "turning_over"
-
-        elif self.state == "turning_over":
-            self.state = "straight_road"
 
     def state_handle(self):
-        # if self.front_max and self.right_min and self.left_min:
-        #     self.state = "straight_road"
-
-        if len(self.ava_direction) == 0:
-            self.state = "end"
-        elif len(self.ava_direction) == 1:
+        if self.front_max and self.right_min and self.left_min:
             self.state = "straight_road"
+        elif self.right_max or self.left_max:
+            if min(self.laser_ranges) > 1:
+                self.state = "corner"
+            else:
+                self.state = "straight_road"
         else:
-            self.state = "corner"
+            self.state = "straight_road"
 
     def record_sensor_data(self):
         self.record_lr = self.laser_ranges
@@ -191,14 +144,12 @@ class MovingControl:
         vel = Twist()
         vel.linear.x = 0
         vel.angular.z = 0
-        if not rospy.is_shutdown():
-            self.cmd_vel_publisher.publish(vel)
+        self.cmd_vel_publisher.publish(vel)
 
     def go_straight(self, speed):
         vel = Twist()
         vel.linear.x = speed
-        if not rospy.is_shutdown():
-            self.cmd_vel_publisher.publish(vel)
+        self.cmd_vel_publisher.publish(vel)
 
     def turn_direction(self, speed):
         vel = Twist()
