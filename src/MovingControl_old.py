@@ -2,8 +2,6 @@ import sensor_msgs.point_cloud2 as pc2
 import rospy
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
-from nav_msgs.msg import Odometry
-
 import math
 import time
 
@@ -35,28 +33,12 @@ class MovingControl:
 
         self.cmd_vel_publisher = rospy.Publisher('/armed3w/diff_drive_controller/cmd_vel',
                         Twist, queue_size = 1)
-
-        while not rospy.is_shutdown():
-            rospy.Subscriber("/armed3w/diff_drive_controllerLR/odom", Odometry, self.update_odo_data)
-            rospy.Subscriber("/scan", LaserScan, self.update_scan_data, queue_size=1)
-
-        # rospy.spin()
-
-    def update_odo_data(self, msg):
-        self.position = msg.pose.pose.position
-        self.orientation = msg.pose.pose.orientation
-
-        print self.position
-        print self.orientation
-
-        # self.rate.sleep()
-        # rospy.sleep(.1)
+        rospy.Subscriber("/scan", LaserScan, self.update_scan_data, queue_size=1)
+        rospy.spin()
 
     def update_scan_data(self, msg):
         laser_ranges = msg.ranges
         mean_ranges = []
-
-        # Use moving average data
         for i in range(self.sample_n):
             cur_s = laser_ranges[i]
             prev_s = laser_ranges[i - 1]
@@ -71,11 +53,25 @@ class MovingControl:
         # self.update_state_and_move()
         # self.update_sensor_data_analysis()
         # self.move_robot()
-        # self.move_on()
-
-        # self.rate.sleep()
+        self.move_on()
 
 
+    def move_on(self):
+        self.update_sensor_data_analysis()
+
+        # if self.cur_direction in self.ava_direction:
+        #     next_dir_i = (self.ava_direction.index(self.cur_direction) + 1) %\
+        #                     len(self.ava_direction)
+        #     self.cur_direction = self.ava_direction[next_dir_i]
+        # else:
+        #     self.cur_direction = self.ava_direction[-1]
+
+        self.cur_direction = self.ava_direction[-1]
+
+        print(self.ava_direction)
+        print(self.cur_direction)
+
+        self.move_direction(self.cur_direction, 2)
 
 
     def update_sensor_data_analysis(self):
@@ -205,6 +201,14 @@ class MovingControl:
         vel.angular.z = speed
         self.cmd_vel_publisher.publish(vel)
 
+    def move_direction(self, direction_i, speed):
+        theta = 1. * direction_i / (self.sample_n - 1) * math.pi * 2 - math.pi / 2
+
+        vel = Twist()
+        vel.linear.x = speed * math.cos(theta)
+        vel.linear.y = speed * math.sin(theta)
+        if not rospy.is_shutdown():
+            self.cmd_vel_publisher.publish(vel)
 
     ###############
     def sub_callback(self, msg):
