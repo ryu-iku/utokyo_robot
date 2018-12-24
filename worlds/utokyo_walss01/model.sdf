@@ -1,0 +1,152 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+  <model name="utokyo_walls01">
+    <static>true</static>
+
+    <link name="wall">
+
+      <collision name="wall01-entrance">
+        <pose>0 5 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>10 .1 1.5</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="wall01-entrance">
+        <pose>1.25 5 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>7.5 .1 1.5</size>
+          </box>
+        </geometry>
+      </visual>
+
+      <collision name="wall02">
+        <pose>5 0 0 0 0 1.570796</pose>
+        <geometry>
+          <box>
+            <size>10 .1 1.5</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="wall02">
+        <pose>5 0 0 0 0 1.570796</pose>
+        <geometry>
+          <box>
+            <size>10 .1 1.5</size>
+          </box>
+        </geometry>
+      </visual>
+
+      <collision name="wall03">
+        <pose>0 -5 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>10 .1 1.5</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="wall03">
+        <pose>0 -5 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>10 .1 1.5</size>
+          </box>
+        </geometry>
+      </visual>
+
+      <collision name="wall04">
+        <pose>-5 0 0 0 0 1.570796</pose>
+        <geometry>
+          <box>
+            <size>10 .1 1.5</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="wall04">
+        <pose>-5 0 0 0 0 1.570796</pose>
+        <geometry>
+          <box>
+            <size>10 .1 1.5</size>
+          </box>
+        </geometry>
+      </visual>
+
+    </link>
+
+    <link name="block">
+
+      <collision name="block01">
+        <pose>-1.25 3.125 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.5 3.75 1.5</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="block01">
+        <pose>-1.25 3.125 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.5 3.75 1.5</size>
+          </box>
+        </geometry>
+      </visual>
+
+
+      <collision name="block02">
+        <pose>3.75 1.875 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.5 1.25 1.5</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="block02">
+        <pose>3.75 1.875 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.5 1.25 1.5</size>
+          </box>
+        </geometry>
+      </visual>
+
+      <collision name="block03">
+        <pose>1.25 -1.875 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.5 1.25 1.5</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="block03">
+        <pose>1.25 -1.875 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.5 1.25 1.5</size>
+          </box>
+        </geometry>
+      </visual>
+
+      <collision name="block04">
+        <pose>-1.25 -3.125 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.5 3.75 1.5</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="block04">
+        <pose>-1.25 -3.125 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.5 3.75 1.5</size>
+          </box>
+        </geometry>
+      </visual>
+
+    </link>
+
+  </model>
+</sdf>

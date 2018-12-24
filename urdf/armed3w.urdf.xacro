@@ -14,7 +14,7 @@
   <joint name="base_link_joint" type="fixed">
     <parent link="base_footprint"/>
     <child link="body"/>
-    <origin xyz="-4 5 0"/>
+    <origin xyz="-4 4 0"/>
   </joint>
 
   <link name='body'>
