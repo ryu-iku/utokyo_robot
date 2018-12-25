@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import rospy
+import math
 from geometry_msgs.msg import Twist
 
 rospy.init_node('vel_publisher')
@@ -12,9 +13,9 @@ while not rospy.is_shutdown():
 	if 'b' in direction:
 		vel.linear.x = -2.0
 	if 'l' in direction:
-		vel.angular.z = 1.0
+		vel.angular.z = -math.pi/4
 	if 'r' in direction:
-		vel.angular.z = -1.0
+		vel.angular.z = math.pi/4
 	if 'q' in direction:
 		berak
 	print vel

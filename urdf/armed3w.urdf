@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <robot name="armed3w">
-<<<<<<< HEAD
-<property name="M_PI" value="3.14159274"/>
-=======
 
   <link name="base_footprint"/>
 
@@ -12,7 +9,6 @@
     <child link="body"/>
     <origin xyz="-4 5 0"/>
   </joint>
->>>>>>> 4e1c7b624336a54794af5c3fedb72d2c18a817a5
   <link name='body'>
     <inertial>
       <mass value="1"/>
@@ -37,11 +33,7 @@
   <joint name="body_wheelFront" type="fixed">
     <parent link="body"/>
     <child link="wheelFront"/>
-<<<<<<< HEAD
-    <origin xyz=".2 0 -.48" rpy="0 0 0"/>
-=======
     <origin xyz="0 .2 -.48" rpy="0 0 0"/>
->>>>>>> 4e1c7b624336a54794af5c3fedb72d2c18a817a5
   </joint>
 
   <link name='wheelFront'>
@@ -67,8 +59,8 @@
   <joint name="body_wheelRight" type="continuous">
     <parent link="body"/>
     <child link="wheelRight"/>
-    <origin xyz="-.1 0.1732 -.48" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
+    <origin xyz="0.1732 -.1 -.48" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
   </joint>
 
   <link name='wheelRight'>
@@ -94,8 +86,8 @@
   <joint name="body_wheelLeft" type="continuous">
     <parent link="body"/>
     <child link="wheelLeft"/>
-    <origin xyz="-.1 -0.1732 -.48" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
+    <origin xyz="-0.1732 -.1 -.48" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
   </joint>
 
   <link name='wheelLeft'>
@@ -121,8 +113,8 @@
   <joint name="body_armRight" type="continuous">
     <parent link="body"/>
     <child link="armRight"/>
-    <origin xyz="0 .3 .2" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
+    <origin xyz=".3 0 .2" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
   </joint>
 
   <link name='armRight'>
@@ -146,21 +138,12 @@
     </visual>
   </link>
 
-<<<<<<< HEAD
-    <joint name="body_armLeft" type="continuous">
-      <parent link="body"/>
-      <child link="armLeft"/>
-      <origin xyz="0 -.3 .2" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
-    </joint>
-=======
   <joint name="body_armLeft" type="continuous">
     <parent link="body"/>
     <child link="armLeft"/>
     <origin xyz="-.3 0 .2" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
   </joint>
->>>>>>> 4e1c7b624336a54794af5c3fedb72d2c18a817a5
 
   <link name='armLeft'>
       <inertial>
@@ -228,49 +211,6 @@
     </actuator>
   </transmission>
   <!-- controller end-->
-  
-  <!-- sensor start -->
-<link name="pico_flexx_link_optical_frame" />
- <link name="pico_flexx_depth_frame"/>
- <link name="pico_flexx_link">
-   <visual>
-    <geometry>
-      <box size="0.007 0.066 0.016"/>
-    </geometry>
-    <material name="green"/>
-   </visual>
-   <collision>
-    <geometry>
-      <box size="0.007 0.066 0.016"/>
-    </geometry>
-   </collision>
-   <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="1"/>
-      <inertia
-        ixx="1.0" ixy="0.0" ixz="0.0"
-        iyy="1.0" iyz="0.0"
-        izz="1.0"/>
-   </inertial>
- </link>
- 
- <joint name="pico_flexx_base_joint" type="fixed">
-   <origin xyz="0.3 0 0.07" rpy="0 0 0"/>
-   <parent link="body"/>
-   <child link="pico_flexx_link_optical_frame"/>
- </joint>
- 
- <joint name="pico_flexx_depth_joint" type="fixed">
-   <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}" />
-   <parent link="pico_flexx_link_optical_frame" />
-   <child link="pico_flexx_depth_frame" />
- </joint>
- 
-  <joint name="pico_flexx_joint" type="fixed">
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-    <parent link="pico_flexx_link_optical_frame"/>
-    <child link="pico_flexx_link"/>
-  </joint>  <!-- sensor end-->
 
   <!-- coefficient of friction start-->
   <gazebo reference="body">
@@ -311,7 +251,7 @@
 
 
   <joint name="camera_joint" type="fixed">
-    <origin xyz="0 -.4 0" rpy="0 0 0"/>
+    <origin xyz="0 -.3 0" rpy="0 0 0"/>
     <parent link="body"/>
     <child link="camera"/>
   </joint>
@@ -342,7 +282,7 @@
 
 
   <joint name="hokuyo_joint" type="fixed">
-    <origin xyz="0 -.4 -.1" rpy="0 0 -1.570796"/>
+    <origin xyz="0 -.3 -.1" rpy="0 0 -1.570796"/>
     <parent link="body"/>
     <child link="hokuyo"/>
   </joint>
@@ -375,7 +315,7 @@
   <gazebo reference="camera">
     <material>Gazebo/Green</material>
     <sensor type="camera" name="camera1">
-      <update_rate>1</update_rate>
+      <update_rate>10</update_rate>
       <camera name="head">
         <horizontal_fov>1.3962634</horizontal_fov>
         <image>
@@ -406,13 +346,12 @@
   </gazebo>
 
   <!-- hokuyo -->
-  <!-- Data explaination-- https://answers.ros.org/question/198843/need-explanation-on-sensor_msgslaserscanmsg/ -->
   <gazebo reference="hokuyo">
     <material>Gazebo/FlatBlack</material>
     <sensor type="ray" name="lds_lfcd_sensor">
       <pose>0 0 0 0 0 0</pose>
       <visualize>true</visualize>
-      <update_rate>1</update_rate>
+      <update_rate>10</update_rate>
       <ray>
         <scan>
           <horizontal>
@@ -423,7 +362,7 @@
           </horizontal>
         </scan>
         <range>
-          <min>0.120</min>
+          <min>0.10</min>
           <max>20</max>
           <resolution>0.01</resolution>
         </range>
@@ -441,42 +380,6 @@
       <robotNamespace>/armed3w</robotNamespace>
     </plugin>
   </gazebo>
-  <!-- sensor plugin start-->
-  <gazebo reference="pico_flexx_link">
-    <sensor type="depth" name="pico_flexx_ir_sensor">
-      <always_on>true</always_on>
-      <update_rate>0.0</update_rate>
-      <camera>
-        <horizontal_fov>${57.0*M_PI/180.0}</horizontal_fov>
-        <image>
-          <format>L8</format>
-          <width>100</width>
-          <height>10</height>
-        </image>
-        <clip>
-          <near>0.5</near>
-          <far>3.0</far>
-        </clip>
-      </camera>
- 
-      <plugin name="pico_flexx_link_controller" filename="libgazebo_ros_openni_kinect.so">
-        <alwaysOn>true</alwaysOn>
-        <updateRate>1.0</updateRate>
-        <cameraName>pico_flexx_link_ir</cameraName>
-        <depthImageTopicName>/pico_flexx_link/depth_registered/image_raw</depthImageTopicName>
-        <depthImageCameraInfoTopicName>/pico_flexx_link/depth/camera_info</depthImageCameraInfoTopicName>
-        <pointCloudTopicName>/pico_flexx_link/points</pointCloudTopicName>
-        <frameName>pico_flexx_depth_frame</frameName>
-        <pointCloudCutoff>0.5</pointCloudCutoff>
-        <distortionK1>0.00000001</distortionK1>
-        <distortionK2>0.00000001</distortionK2>
-        <distortionK3>0.00000001</distortionK3>
-        <distortionT1>0.00000001</distortionT1>
-        <distortionT2>0.00000001</distortionT2>
-      </plugin>
-    </sensor>
-    <material value="Gazebo/Blue" />
-  </gazebo>
-  <!-- sensor plugin end-->
 
 </robot>
+
