@@ -6,37 +6,37 @@
   <!-- coefficient of friction start-->
   <gazebo reference="body">
     <selfCollide>true</selfCollide>
-      <mu1 value="0.05"/>
-      <mu2 value="0.05"/>
+    <mu1 value="0.05"/>
+    <mu2 value="0.05"/>
   </gazebo>
 
   <gazebo reference="wheelFront">
     <selfCollide>true</selfCollide>
-      <mu1 value="0.0"/>
-      <mu2 value="0.0"/>
+    <mu1 value="0.0"/>
+    <mu2 value="0.0"/>
   </gazebo>
 
   <gazebo reference="wheelRight">
     <selfCollide>true</selfCollide>
-      <mu1 value="0.8"/>
-      <mu2 value="0.8"/>
+    <mu1 value="0.8"/>
+    <mu2 value="0.8"/>
   </gazebo>
 
   <gazebo reference="wheelLeft">
     <selfCollide>true</selfCollide>
-      <mu1 value="0.8"/>
-      <mu2 value="0.8"/>
+    <mu1 value="0.8"/>
+    <mu2 value="0.8"/>
   </gazebo>
 
   <gazebo reference="armRight">
     <selfCollide>true</selfCollide>
-      <mu1 value="0.8"/>
-      <mu2 value="0.8"/>
+    <mu1 value="0.8"/>
+    <mu2 value="0.8"/>
   </gazebo>
   <gazebo reference="armLeft">
     <selfCollide>true</selfCollide>
-      <mu1 value="0.8"/>
-      <mu2 value="0.8"/>
+    <mu1 value="0.8"/>
+    <mu2 value="0.8"/>
   </gazebo>
   <!-- coefficient of friction end-->
 
@@ -79,12 +79,12 @@
     <material>Gazebo/FlatBlack</material>
     <sensor type="ray" name="lds_lfcd_sensor">
       <pose>0 0 0 0 0 0</pose>
-      <visualize>true</visualize>
-      <update_rate>20</update_rate>
+      <visualize>false</visualize>
+      <update_rate>50</update_rate>
       <ray>
         <scan>
           <horizontal>
-            <samples>101</samples>
+            <samples>51</samples>
             <resolution>1</resolution>
             <min_angle>-3.1415926</min_angle>
             <max_angle>3.1415926</max_angle>

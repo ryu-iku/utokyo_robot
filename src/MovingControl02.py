@@ -1,3 +1,5 @@
+# Add memory of visited areas
+
 import rospy
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
@@ -15,14 +17,14 @@ class MovingControl:
         self.sample_n = 51
         self.max_range = 20
         self.min_range = .1
-        self.shortest_road = 3 #2
-        self.safe_distance = 1. #1
+        self.shortest_road = 2 #2
+        self.safe_distance = 1.2 #1
         self.round_angle = 2 * PI
-        self.straight_speed = .5 #3 #To be tuned!
-        self.turn_speed = .5 #To be tuned!
-        self.turn_angle_bias = .1 #.05
+        self.straight_speed = 1 #3 #To be tuned!
+        self.turn_speed = .3 #To be tuned!
+        self.turn_angle_bias = .05 #.05
         self.cleared_area = {} #Store visited areas
-        self.area_unit = 2.
+        self.area_unit = 1.
 
         self.quarter_lsi = int((self.sample_n - 1) / 4)
         self.back_i = 0
@@ -44,6 +46,7 @@ class MovingControl:
         self.orientation = None
         self.goal_orientation = None
         self.turning = False
+
 
     def start(self):
         rospy.init_node('MovingControl')
@@ -172,7 +175,7 @@ class MovingControl:
                 # self.stop()
 
                 # Turn around if there is a risk to bump the wall
-                alpha = .3
+                alpha = .6
                 angle_go_right = (self.si_to_orientation(min_ri) + PI * alpha) % self.round_angle
                 angle_go_left = (self.si_to_orientation(min_ri) - PI * alpha) % self.round_angle
 
@@ -226,14 +229,7 @@ class MovingControl:
 
     def turn_direction(self, speed):
         vel = Twist()
-        # vel.linear.x = .02
         vel.angular.z = speed
-        self.cmd_vel_publisher.publish(vel)
-
-    def twist_control(self, linear_x, angular_z):
-        vel = Twist()
-        vel.linear.x = linear_x
-        vel.angular.z = angular_z
         self.cmd_vel_publisher.publish(vel)
 
     ###### Tool functions

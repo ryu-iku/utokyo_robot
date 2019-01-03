@@ -4,7 +4,6 @@
 
   <xacro:property name="body_height" value="0.4" />
   <xacro:property name="wheel_radius" value="0.05" />
-  <xacro:property name="arm_length" value="0.6" />
   <xacro:property name="pi" value="3.1415926" />
   <xacro:property name="sensor_size" value=".1" />
 
@@ -21,8 +20,8 @@
   <link name='body'>
     <inertial>
       <mass value="1"/>
-      <!-- #cylinder Izz = 1/2 * M * r^2 -->
-      <!-- #cylinder Iyy = Ixx = 1/12 * M * l^2 -->
+      #cylinder Izz = 1/2 * M * r^2
+      #cylinder Iyy = Ixx = 1/12 * M * l^2
       <inertia ixx=".0675"  ixy="0"  ixz="0" iyy=".0675" iyz="0" izz=".045"/>
     </inertial>
     <collision>
@@ -31,10 +30,10 @@
         <cylinder radius=".3" length="${body_height}"/>
       </geometry>
     </collision>
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+    <visual name='bb8_visual'>
+      <origin xyz="0 0 -.26" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius=".3" length="${body_height}"/>
+        <mesh filename="package://robot_utokyo/models/bb8/meshes/BB8.dae" scale=".05 .05 .05"/>
       </geometry>
     </visual>
   </link>
@@ -60,7 +59,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <sphere radius="${wheel_radius}"/>
+        <sphere radius=".001"/>
       </geometry>
     </visual>
   </link>
@@ -87,7 +86,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <sphere radius="${wheel_radius}"/>
+        <sphere radius=".001"/>
       </geometry>
     </visual>
   </link>
@@ -114,66 +113,11 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <sphere radius="${wheel_radius}"/>
+        <sphere radius=".001"/>
       </geometry>
     </visual>
   </link>
 
-  <joint name="body_armRight" type="continuous">
-    <parent link="body"/>
-    <child link="armRight"/>
-    <origin xyz=".3 0 .2" rpy="${- pi / 2} 0 0"/>
-    <axis xyz="1 0 0"/>
-  </joint>
-
-  <link name='armRight'>
-    <inertial>
-      <mass value=".1"/>
-      <!-- #cylinder Izz = 1/2 * M * r^2 -->
-      <!-- #cylinder Iyy = Ixx = 1/12 * M * l^2 -->
-      <inertia ixx=".003"  ixy="0"  ixz="0" iyy=".003" iyz="0" izz=".000045"/>
-    </inertial>
-    <collision>
-      <origin xyz="0 0 -.3" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius=".03" length="${arm_length}"/>
-      </geometry>
-    </collision>
-    <visual>
-      <origin xyz="0 0 -.3" rpy="0 0 0"/>
-      <geometry>
-        <cylinder radius=".03" length="${arm_length}"/>
-      </geometry>
-    </visual>
-  </link>
-
-  <joint name="body_armLeft" type="continuous">
-    <parent link="body"/>
-    <child link="armLeft"/>
-    <origin xyz="-.3 0 .2" rpy="${- pi / 2} 0 0"/>
-    <axis xyz="1 0 0"/>
-  </joint>
-
-  <link name='armLeft'>
-      <inertial>
-        <mass value=".1"/>
-      <!-- #cylinder Izz = 1/2 * M * r^2
-      #cylinder Iyy = Ixx = 1/12 * M * l^2 -->
-      <inertia ixx=".003"  ixy="0"  ixz="0" iyy=".003" iyz="0" izz=".000045"/>
-      </inertial>
-      <collision>
-        <origin xyz="0 0 -.3" rpy="0 0 0"/>
-        <geometry>
-          <cylinder radius=".03" length="${arm_length}"/>
-        </geometry>
-      </collision>
-      <visual>
-        <origin xyz="0 0 -.3" rpy="0 0 0"/>
-        <geometry>
-          <cylinder radius=".03" length="${arm_length}"/>
-        </geometry>
-      </visual>
-    </link>
 
   <!-- controller start-->
   <transmission name="body_wheelRight_trans">
@@ -198,27 +142,6 @@
     </actuator>
   </transmission>
 
-  <transmission name="body_armRight_trans">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="body_armRight">
-      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="body_armRight_motor">
-      <hardwareInterface>VelocityJointInterface</hardwareInterface>
-      <mechanicalReduction>30</mechanicalReduction>
-    </actuator>
-  </transmission>
-
-  <transmission name="body_armLeft_trans">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="body_armLeft">
-      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="body_armLeft_motor">
-      <hardwareInterface>VelocityJointInterface</hardwareInterface>
-      <mechanicalReduction>30</mechanicalReduction>
-    </actuator>
-  </transmission>
   <!-- controller end-->
 
   <joint name="camera_joint" type="fixed">

@@ -12,17 +12,19 @@ PI = math.pi
 
 class MovingControl:
     def __init__(self):
+        self.start_angle = - PI
+        self.end_angle = PI
         self.sample_n = 51
         self.max_range = 20
         self.min_range = .1
-        self.shortest_road = 3 #2
-        self.safe_distance = 1. #1
+        self.shortest_road = 2 #2
+        self.safe_distance = 1.2 #1
+        # self.danger_distance = .6
         self.round_angle = 2 * PI
-        self.straight_speed = .5 #3 #To be tuned!
-        self.turn_speed = .5 #To be tuned!
-        self.turn_angle_bias = .1 #.05
-        self.cleared_area = {} #Store visited areas
-        self.area_unit = 2.
+        self.mean_window = 5
+        self.straight_speed = 1 #3 #To be tuned!
+        self.turn_speed = .3 #To be tuned!
+        self.turn_angle_bias = .05 #.05
 
         self.quarter_lsi = int((self.sample_n - 1) / 4)
         self.back_i = 0
@@ -34,37 +36,33 @@ class MovingControl:
         self.left_front_i = int((self.sample_n - 1) * 5 / 8)
         self.left_back_i = int((self.sample_n - 1) * 7 / 8)
 
-        # self.mean_window = int(self.quarter_lsi / 2)
-        self.mean_window = 1
-
         # self.state_set = {"start", "straight_road", "corner", "end", "turn_around_at_corner", "turn_around_at_end", "turning_over", "goal"}
         self.state = "start"
+        # self.mean_window = 1
 
         self.laser_ranges = None
         self.orientation = None
         self.goal_orientation = None
         self.turning = False
 
-    def start(self):
         rospy.init_node('MovingControl')
         self.rate = rospy.Rate(10)
         self.cmd_vel_publisher = rospy.Publisher('/armed3w/diff_drive_controller/cmd_vel',
                         Twist, queue_size=1)
+
+    def start(self):
         while not rospy.is_shutdown():
             rospy.Subscriber("/armed3w/diff_drive_controller/odom", Odometry, self.update_odo_data, queue_size=1)
             rospy.Subscriber("/scan", LaserScan, self.update_scan_data, queue_size=1)
             if self.laser_ranges != None and self.orientation != None:
-                self.update_sensor_data_analysis()
                 self.move_on()
             self.rate.sleep()
 
     def update_odo_data(self, msg):
-        self.pos_x = msg.pose.pose.position.x
-        self.pos_y = msg.pose.pose.position.y
-
         orientation_q = msg.pose.pose.orientation
         _, _, self.orientation = euler_from_quaternion([orientation_q.x,
         orientation_q.y, orientation_q.z, orientation_q.w])
+
         self.orientation = self.orientation % self.round_angle
 
     def update_scan_data(self, msg):
@@ -79,7 +77,7 @@ class MovingControl:
         self.laser_ranges = laser_ranges
 
     def update_sensor_data_analysis(self):
-        lr_moving_average = self.moving_average(self.laser_ranges, self.mean_window)
+        lr_moving_average = self.moving_average(self.laser_ranges, int(self.sample_n / 8))
 
         max_sensor_arr = []
         msa_front = []
@@ -103,19 +101,29 @@ class MovingControl:
         self.max_sensor_arr = max_sensor_arr
         self.msa_front = msa_front
 
-        # print "Max sensor data numbers", self.max_sensor_arr
-        # print "Available direction in front:", self.msa_front
-        # print "Available orientation in front:", map(lambda i:self.si_to_orientation(i), self.msa_front)
+        print self.max_sensor_arr
+        print self.msa_front
+        print map(lambda i:self.si_to_orientation(i), self.msa_front)
 
+    def bump_range(self, si):
+        alpha = .4
+        r_start = min(si, self.front_i, (si - int(self.quarter_lsi * alpha)))
+        r_end = max(si, self.front_i, (si + int(self.quarter_lsi * alpha) + 1))
+
+        front_range = self.laser_ranges[r_start:(r_end + 1)]
+
+        min_rs, itr = min(list(zip(front_range, range(len(front_range)))))
+        min_ri = itr + r_start
+
+        return min_rs, min_ri
 
     # Go along one side wall
     def move_on(self):
+        self.update_sensor_data_analysis()
 
         if self.state == "go_along_wall":
             si = self.ori_to_si(self.real_goal_orientation)
             min_rs, min_ri = self.bump_range(si)
-            print("min_rs = %s, min_ri = %s"%(min_rs, min_ri), self.si_to_orientation(min_ri))
-            print self.laser_ranges
 
             if min_rs >= self.safe_distance:
                 self.goal_orientation = self.real_goal_orientation
@@ -133,30 +141,10 @@ class MovingControl:
             self.turn_over_and_go()
 
         elif len(self.msa_front) >= 1:
-            # Select the most left available direction
-            # si = self.msa_front[-1]
+            si = self.msa_front[-1]
 
-            # Choose the direction not in the visited area storage.
-            si = None
-            for tmp_si in reversed(self.msa_front):
-                si_area = self.si_to_area(tmp_si, self.laser_ranges[tmp_si])
-                print "The area of si number is:", si_area
-                if self.cleared_area.has_key(si_area):
-                    print "The area was visited!"
-                    continue
-                else:
-                    print "The area was not visited. Choose it!"
-                    si = tmp_si
-                    break
-            if si == None:
-                print "No unvisited area, choose the most left direction"
-                si = self.msa_front[-1]
-            print "Available direction in front: %s, the direction chosen: %s"%(self.msa_front, si)
-
-            # Check bump range
             min_rs, min_ri = self.bump_range(si)
             print("min_rs = %s, min_ri = %s"%(min_rs, min_ri), self.si_to_orientation(min_ri))
-            print self.laser_ranges
 
             target_ori = self.si_to_orientation(si)
 
@@ -172,12 +160,12 @@ class MovingControl:
                 # self.stop()
 
                 # Turn around if there is a risk to bump the wall
-                alpha = .3
+                alpha = .45
                 angle_go_right = (self.si_to_orientation(min_ri) + PI * alpha) % self.round_angle
                 angle_go_left = (self.si_to_orientation(min_ri) - PI * alpha) % self.round_angle
 
-                if self.min_angle_diff(angle_go_left, target_ori) <=\
-                self.min_angle_diff(angle_go_right, target_ori):
+                if self.get_min_distance(angle_go_left, target_ori) <=\
+                self.get_min_distance(angle_go_right, target_ori):
                     self.goal_orientation = angle_go_left
                     print(">> goal orientation changed to angle_go_left")
                 else:
@@ -194,6 +182,7 @@ class MovingControl:
             print("state = %s, length = %s"%(self.state, self.laser_ranges[self.front_i]))
             self.turn_direction(self.turn_speed)
 
+
     def turn_over_and_go(self):
         print "state = ", self.state
         print "goal_orientation", self.goal_orientation
@@ -201,7 +190,6 @@ class MovingControl:
         if abs(self.goal_orientation - self.orientation) <= self.turn_angle_bias:
             print("Go straight!")
             self.go_straight(self.straight_speed)
-            self.store_visited_area()
         elif (self.goal_orientation > self.orientation and\
         self.goal_orientation - self.orientation <= math.pi) or\
         (self.goal_orientation < self.orientation and\
@@ -212,7 +200,6 @@ class MovingControl:
             print("Turn left!")
             self.turn_direction(-self.turn_speed)
 
-    ###### Action function
     def stop(self):
         vel = Twist()
         vel.linear.x = 0
@@ -226,17 +213,10 @@ class MovingControl:
 
     def turn_direction(self, speed):
         vel = Twist()
-        # vel.linear.x = .02
         vel.angular.z = speed
         self.cmd_vel_publisher.publish(vel)
 
-    def twist_control(self, linear_x, angular_z):
-        vel = Twist()
-        vel.linear.x = linear_x
-        vel.angular.z = angular_z
-        self.cmd_vel_publisher.publish(vel)
-
-    ###### Tool functions
+    ###### tool functions
     def moving_average(self, arr, mean_window):
         res = []
         arr_len = len(arr)
@@ -248,22 +228,9 @@ class MovingControl:
             res.append(s_sum / mean_window)
         return res
 
-    def min_angle_diff(self, deg1, deg2):
+    def get_min_distance(self, deg1, deg2):
         dis = (deg1 - deg2) % self.round_angle
         return min(dis, self.round_angle - dis)
-
-    def bump_range(self, si):
-        alpha = .4
-        r_start = min(si, self.front_i, (si - int(self.quarter_lsi * alpha)))
-        r_end = max(si, self.front_i, (si + int(self.quarter_lsi * alpha) + 1))
-
-        front_range = self.laser_ranges[r_start:(r_end + 1)]
-
-        min_rs, itr = min(list(zip(front_range, range(len(front_range)))))
-        min_ri = itr + r_start
-
-        return min_rs, min_ri
-
 
     def si_to_orientation(self, si):
         ori_zero = (1. - 2. * si / (self.sample_n - 1)) * PI
@@ -276,30 +243,6 @@ class MovingControl:
     def ori_to_si(self, ori):
         ori_zero = (ori - self.orientation) % self.round_angle
         return int(round((1. - ori_zero / PI) * (self.sample_n - 1.) / 2.) % self.sample_n)
-
-    def coor_to_area(self, x, y):
-        area_x_start = math.floor(x / self.area_unit) * self.area_unit
-        area_x_end = math.ceil(x / self.area_unit) * self.area_unit
-
-        area_y_start = math.floor(y / self.area_unit) * self.area_unit
-        area_y_end = math.ceil(y / self.area_unit) * self.area_unit
-
-        key = "x%dx%dy%dy%d"%(area_x_start, area_x_end, area_y_start, area_y_end)
-
-        return key
-
-    def store_visited_area(self):
-        key = self.coor_to_area(self.pos_x, self.pos_y)
-        self.cleared_area[key] = True
-        print "Visited areas: ", self.cleared_area
-
-    def si_to_area(self, si, laser_r):
-        ori = self.si_to_orientation(si)
-        x = math.cos(ori) + self.pos_x
-        y = math.sin(ori) + self.pos_y
-
-        return self.coor_to_area(x, y)
-
 
 if __name__ == "__main__":
     mc = MovingControl()
