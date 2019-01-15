@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="head">
+  <link name="top">
+    <inertial>
+      <mass value=".06"/>
+      <!-- cylinder Izz = 1/2 * M * r^2 -->
+      <!-- cylinder Iyy = Ixx = 1/12 * M * l^2 -->
+      <inertia ixx=".0002"  ixy="0"  ixz="0" iyy=".0002" iyz="0" izz=".003675"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".35" length=".2"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".35" length=".2"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="neck">
+    <inertial>
+      <mass value="0"/>
+      <inertia ixx="0"  ixy="0"  ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".25" length=".1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".25" length=".1"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="top_neck" type="fixed">
+    <parent link="top"/>
+    <child link="neck"/>
+    <origin xyz="0 0 -.15" rpy="0 0 0"/>
+  </joint>
+
+  <!-- coefficient of friction-->
+  <gazebo reference="neck">
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.01"/><!--kinetic-->
+      <mu2 value="0.01"/><!--static-->
+  </gazebo>
+
+
+</robot>

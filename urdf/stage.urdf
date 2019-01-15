@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="stage">
+  <link name="body">
+    <inertial>
+      <mass value="12"/>
+      <!--cylinder Izz = 1/2 * M * r^2-->
+      <!--cylinder Iyy = Ixx = 1/12 * M * l^2-->
+      <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz=".135"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".15" length="1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius=".15" length="1"/>
+      </geometry>
+    </visual>
+  </link>
+  <gazebo reference="body">
+    <material>Gazebo/Blue</material>
+    <selfCollide>true</selfCollide>
+      <mu1 value="0.5"/>
+      <mu2 value="0.5"/>
+  <gazebo/>
+</robot>

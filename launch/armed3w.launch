@@ -25,4 +25,7 @@
     <param name="publish_frequency" type="double" value="30.0" />
   </node>
 
+  <node name="stage" pkg="gazebo_ros" type="spawn_model" args="-file $(find robot_utokyo)/urdf/stage.urdf -urdf -z 0 -x -4 -y 0 -model stage" />
+  <node name="head" pkg="gazebo_ros" type="spawn_model" args="-file $(find robot_utokyo)/urdf/head.urdf -urdf -z 1 -x -4 -y 0 -model head" />
+
 </launch>

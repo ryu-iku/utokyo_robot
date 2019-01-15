@@ -9,6 +9,7 @@
     <child link="body"/>
     <origin xyz="-4 5 0"/>
   </joint>
+  
   <link name='body'>
     <inertial>
       <mass value="1"/>
@@ -30,6 +31,31 @@
     </visual>
   </link>
 
+  <link name="stopper1">
+    <inertial><mass value="0"/><inertia ixx="0"  ixy="0"  ixz="0" iyy="0" iyz="0" izz="0"/></inertial>
+    <collision><geometry><cylinder radius=".02" length=".01"/></geometry></collision>
+    <visual>   <geometry><cylinder radius=".02" length=".01"/></geometry></visual>
+  </link>
+  <link name="stopper2">
+    <inertial><mass value="0"/><inertia ixx="0"  ixy="0"  ixz="0" iyy="0" iyz="0" izz="0"/></inertial>
+    <collision><geometry><cylinder radius=".02" length=".01"/></geometry></collision>
+    <visual>   <geometry><cylinder radius=".02" length=".01"/></geometry></visual>
+  </link>
+  <link name="stopper3">
+    <inertial><mass value="0"/><inertia ixx="0"  ixy="0"  ixz="0" iyy="0" iyz="0" izz="0"/></inertial>
+    <collision><geometry><cylinder radius=".02" length=".01"/></geometry></collision>
+    <visual>   <geometry><cylinder radius=".02" length=".01"/></geometry></visual>
+  </link>
+  <link name="stopper4">
+    <inertial><mass value="0"/><inertia ixx="0"  ixy="0"  ixz="0" iyy="0" iyz="0" izz="0"/></inertial>
+    <collision><geometry><cylinder radius=".02" length=".01"/></geometry></collision>
+    <visual>   <geometry><cylinder radius=".02" length=".01"/></geometry></visual>
+  </link>
+  <joint name="body_stopper1" type="fixed"><parent link="body"/><child link="stopper1"/><origin xyz="0 -.275 .45" rpy="0 0 0"/></joint>
+  <joint name="body_stopper2" type="fixed"><parent link="body"/><child link="stopper2"/><origin xyz="0  .275 .45" rpy="0 0 0"/></joint>
+  <joint name="body_stopper3" type="fixed"><parent link="body"/><child link="stopper3"/><origin xyz=" .275 0 .45" rpy="0 0 0"/></joint>
+  <joint name="body_stopper4" type="fixed"><parent link="body"/><child link="stopper4"/><origin xyz="-.275 0 .45" rpy="0 0 0"/></joint>
+  
   <joint name="body_wheelFront" type="fixed">
     <parent link="body"/>
     <child link="wheelFront"/>
@@ -213,6 +239,27 @@
   <!-- controller end-->
 
   <!-- coefficient of friction start-->
+  <gazebo reference="stopper1">
+    <selfCollide>true</selfCollide>
+      <mu1 value="1"/>
+      <mu2 value="1"/>
+  </gazebo>
+  <gazebo reference="stopper2">
+    <selfCollide>true</selfCollide>
+      <mu1 value="1"/>
+      <mu2 value="1"/>
+  </gazebo>
+  <gazebo reference="stopper3">
+    <selfCollide>true</selfCollide>
+      <mu1 value="1"/>
+      <mu2 value="1"/>
+  </gazebo>
+  <gazebo reference="stopper4">
+    <selfCollide>true</selfCollide>
+      <mu1 value="1"/>
+      <mu2 value="1"/>
+  </gazebo>
+
   <gazebo reference="body">
     <selfCollide>true</selfCollide>
       <mu1 value="0.05"/>
@@ -251,7 +298,7 @@
 
 
   <joint name="camera_joint" type="fixed">
-    <origin xyz="0 -.3 0" rpy="0 0 0"/>
+    <origin xyz="0 -.3 0" rpy="0 0  -1.570796"/>
     <parent link="body"/>
     <child link="camera"/>
   </joint>
@@ -315,17 +362,19 @@
   <gazebo reference="camera">
     <material>Gazebo/Green</material>
     <sensor type="camera" name="camera1">
+      <visualize>false</visualize>
       <update_rate>10</update_rate>
       <camera name="head">
-        <horizontal_fov>1.3962634</horizontal_fov>
+        <!--<horizontal_fov>1.3962634</horizontal_fov>-->
+        <horizontal_fov>0.1</horizontal_fov>
         <image>
           <width>20</width>
-          <height>20</height>
+          <height>1</height>
           <format>R8G8B8</format>
         </image>
         <clip>
           <near>0.02</near>
-          <far>300</far>
+          <far>100</far>
         </clip>
       </camera>
       <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
@@ -350,7 +399,7 @@
     <material>Gazebo/FlatBlack</material>
     <sensor type="ray" name="lds_lfcd_sensor">
       <pose>0 0 0 0 0 0</pose>
-      <visualize>true</visualize>
+      <visualize>false</visualize>
       <update_rate>10</update_rate>
       <ray>
         <scan>
