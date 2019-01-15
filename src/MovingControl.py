@@ -16,7 +16,7 @@ class MovingControl:
         self.max_range = 20
         self.min_range = .1
         self.shortest_road = 3 #2
-        self.safe_distance = 1. #1
+        self.safe_distance = .7 #1
         self.round_angle = 2 * PI
         self.straight_speed = .5 #3 #To be tuned!
         self.turn_speed = .5 #To be tuned!
